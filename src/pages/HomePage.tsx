@@ -91,6 +91,60 @@ const CAFE_DATA: Cafe[] = [
     location: "Creative Quarter",
     rating: 4.9,
     openTime: "7:30 AM - 9:30 PM"
+  },
+  {
+    id: "7",
+    name: "Roast & Relax",
+    image: cafe1,
+    tagline: "Premium beans, perfect atmosphere",
+    location: "University District",
+    rating: 4.7,
+    openTime: "6:00 AM - 11:00 PM"
+  },
+  {
+    id: "8",
+    name: "Morning Glory",
+    image: cafe2,
+    tagline: "Start your day with exceptional coffee",
+    location: "Business Quarter",
+    rating: 4.8,
+    openTime: "5:30 AM - 8:00 PM"
+  },
+  {
+    id: "9",
+    name: "The Grind House",
+    image: cafe3,
+    tagline: "Freshly ground, perfectly brewed",
+    location: "Tech Hub",
+    rating: 4.9,
+    openTime: "7:00 AM - 10:00 PM"
+  },
+  {
+    id: "10",
+    name: "Serenity Sips",
+    image: cafe4,
+    tagline: "Tranquil vibes, extraordinary coffee",
+    location: "Riverside Park",
+    rating: 4.6,
+    openTime: "8:00 AM - 9:00 PM"
+  },
+  {
+    id: "11",
+    name: "Urban Espresso",
+    image: cafe5,
+    tagline: "Fast-paced city, slow-brewed perfection",
+    location: "Metro Center",
+    rating: 4.8,
+    openTime: "6:00 AM - 11:00 PM"
+  },
+  {
+    id: "12",
+    name: "Heritage Beans",
+    image: cafe6,
+    tagline: "Traditional methods, modern taste",
+    location: "Old Town",
+    rating: 4.9,
+    openTime: "7:00 AM - 10:00 PM"
   }
 ];
 
@@ -131,10 +185,19 @@ export const HomePage = () => {
     setCurrentView('plans');
   };
 
+  const handleHomeClick = () => {
+    setCurrentView('home');
+  };
+
   if (currentView === 'bookings') {
     return (
       <div className="min-h-screen bg-background">
-        <Navbar onMyBookingsClick={handleMyBookingsClick} />
+        <Navbar 
+          onMyBookingsClick={handleMyBookingsClick}
+          onHomeClick={handleHomeClick}
+          onCafesClick={handleExploreCafes}
+          onPlansClick={handleViewPlans}
+        />
         <MyBookings bookings={bookings} onBack={handleBackToHome} />
       </div>
     );
@@ -143,12 +206,17 @@ export const HomePage = () => {
   if (currentView === 'plans') {
     return (
       <div className="min-h-screen bg-background">
-        <Navbar onMyBookingsClick={handleMyBookingsClick} />
+        <Navbar 
+          onMyBookingsClick={handleMyBookingsClick}
+          onHomeClick={handleHomeClick}
+          onCafesClick={handleExploreCafes}
+          onPlansClick={handleViewPlans}
+        />
         <SubscriptionPlans />
         <div className="container mx-auto px-4 py-8 text-center">
           <button 
             onClick={handleBackToHome}
-            className="text-primary hover:text-primary/80 transition-colors"
+            className="text-accent hover:text-accent/80 transition-colors font-medium"
           >
             ← Back to Home
           </button>
@@ -166,7 +234,12 @@ export const HomePage = () => {
       />
       
       {/* Navigation */}
-      <Navbar onMyBookingsClick={handleMyBookingsClick} />
+      <Navbar 
+        onMyBookingsClick={handleMyBookingsClick}
+        onHomeClick={handleHomeClick}
+        onCafesClick={handleExploreCafes}
+        onPlansClick={handleViewPlans}
+      />
       
       {/* Cafe Discovery Section */}
       <div ref={cafeGridRef} className="container mx-auto px-4 py-16">
