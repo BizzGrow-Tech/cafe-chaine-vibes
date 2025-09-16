@@ -1,8 +1,10 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Navbar } from "@/components/Navbar";
 import { CafeCard } from "@/components/CafeCard";
 import { BookingModal } from "@/components/BookingModal";
 import { MyBookings } from "@/components/MyBookings";
+import { HeroSection } from "@/components/HeroSection";
+import { SubscriptionPlans } from "@/components/SubscriptionPlans";
 
 // Import cafe images
 import cafe1 from "@/assets/cafe-1.jpg";
@@ -95,8 +97,9 @@ const CAFE_DATA: Cafe[] = [
 export const HomePage = () => {
   const [selectedCafe, setSelectedCafe] = useState<Cafe | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [currentView, setCurrentView] = useState<'home' | 'bookings'>('home');
+  const [currentView, setCurrentView] = useState<'home' | 'bookings' | 'plans'>('home');
   const [bookings, setBookings] = useState<Booking[]>([]);
+  const cafeGridRef = useRef<HTMLDivElement>(null);
 
   const handleCafeClick = (cafe: Cafe) => {
     setSelectedCafe(cafe);
@@ -120,28 +123,59 @@ export const HomePage = () => {
     setCurrentView('home');
   };
 
+  const handleExploreCafes = () => {
+    cafeGridRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  const handleViewPlans = () => {
+    setCurrentView('plans');
+  };
+
   if (currentView === 'bookings') {
     return (
       <div className="min-h-screen bg-background">
+        <Navbar onMyBookingsClick={handleMyBookingsClick} />
         <MyBookings bookings={bookings} onBack={handleBackToHome} />
+      </div>
+    );
+  }
+
+  if (currentView === 'plans') {
+    return (
+      <div className="min-h-screen bg-background">
+        <Navbar onMyBookingsClick={handleMyBookingsClick} />
+        <SubscriptionPlans />
+        <div className="container mx-auto px-4 py-8 text-center">
+          <button 
+            onClick={handleBackToHome}
+            className="text-primary hover:text-primary/80 transition-colors"
+          >
+            ← Back to Home
+          </button>
+        </div>
       </div>
     );
   }
 
   return (
     <div className="min-h-screen bg-background">
+      {/* Hero Section */}
+      <HeroSection 
+        onExploreCafes={handleExploreCafes}
+        onViewPlans={handleViewPlans}
+      />
+      
+      {/* Navigation */}
       <Navbar onMyBookingsClick={handleMyBookingsClick} />
       
-      {/* Hero Section */}
-      <div className="container mx-auto px-4 py-12">
+      {/* Cafe Discovery Section */}
+      <div ref={cafeGridRef} className="container mx-auto px-4 py-16">
         <div className="text-center mb-12">
-          <h1 className="text-5xl font-bold text-primary mb-4">
-            Discover Your Perfect
-            <span className="bg-gradient-warm bg-clip-text text-transparent"> Cafe</span>
-          </h1>
+          <h2 className="text-4xl font-bold text-primary mb-4">
+            Featured Cafes Near You
+          </h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Book tables at the city's most charming cafes. From cozy corners to rooftop views, 
-            find your ideal spot for coffee, conversation, and connection.
+            Handpicked cafes that promise exceptional coffee, ambiance, and memorable experiences.
           </p>
         </div>
 

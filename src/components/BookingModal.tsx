@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Calendar, Clock, Users, X, QrCode, Download } from "lucide-react";
+import { Calendar, Clock, Users, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -130,14 +130,9 @@ export const BookingModal = ({ cafe, isOpen, onClose, onBookingComplete }: Booki
     <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className="modal-content max-w-md">
         <DialogHeader>
-          <div className="flex items-center justify-between">
-            <DialogTitle className="text-xl font-semibold text-primary">
-              {step === 'form' ? `Book a Table at ${cafe.name}` : 'Booking Confirmed'}
-            </DialogTitle>
-            <Button variant="ghost" size="icon" onClick={handleClose}>
-              <X className="w-4 h-4" />
-            </Button>
-          </div>
+          <DialogTitle className="text-xl font-semibold text-primary">
+            {step === 'form' ? `Book a Table at ${cafe.name}` : 'Booking Confirmed'}
+          </DialogTitle>
         </DialogHeader>
 
         {step === 'form' ? (
