@@ -5,6 +5,7 @@ import { BookingModal } from "@/components/BookingModal";
 import { MyBookings } from "@/components/MyBookings";
 import { HeroSection } from "@/components/HeroSection";
 import { SubscriptionPlans } from "@/components/SubscriptionPlans";
+import Layout from "@/components/Layout";
 
 // Import cafe images
 import cafe1 from "@/assets/cafe-1.jpg";
@@ -24,17 +25,12 @@ interface Cafe {
   openTime: string;
 }
 
-interface Booking {
+interface Redemption {
   id: string;
   cafe: Cafe;
-  fullName: string;
-  phone: string;
-  email: string;
-  date: string;
-  time: string;
-  guests: string;
+  otp: string;
   createdAt: string;
-  qrCode: string;
+  expiresAt: string;
 }
 
 const CAFE_DATA: Cafe[] = [
@@ -45,7 +41,7 @@ const CAFE_DATA: Cafe[] = [
     tagline: "Cozy corner for coffee & conversation",
     location: "Downtown Arts District",
     rating: 4.8,
-    openTime: "7:00 AM - 10:00 PM"
+    openTime: "7:00 AM - 10:00 PM",
   },
   {
     id: "2",
@@ -54,7 +50,7 @@ const CAFE_DATA: Cafe[] = [
     tagline: "Scandinavian simplicity meets perfect coffee",
     location: "Midtown Plaza",
     rating: 4.9,
-    openTime: "6:30 AM - 9:00 PM"
+    openTime: "6:30 AM - 9:00 PM",
   },
   {
     id: "3",
@@ -63,7 +59,7 @@ const CAFE_DATA: Cafe[] = [
     tagline: "Vintage vibes & artisan coffee",
     location: "Historic Quarter",
     rating: 4.7,
-    openTime: "8:00 AM - 11:00 PM"
+    openTime: "8:00 AM - 11:00 PM",
   },
   {
     id: "4",
@@ -72,7 +68,7 @@ const CAFE_DATA: Cafe[] = [
     tagline: "Coffee among the flowers",
     location: "Botanical District",
     rating: 4.6,
-    openTime: "9:00 AM - 8:00 PM"
+    openTime: "9:00 AM - 8:00 PM",
   },
   {
     id: "5",
@@ -81,7 +77,7 @@ const CAFE_DATA: Cafe[] = [
     tagline: "City views with every sip",
     location: "Financial District",
     rating: 4.8,
-    openTime: "6:00 AM - 10:00 PM"
+    openTime: "6:00 AM - 10:00 PM",
   },
   {
     id: "6",
@@ -90,7 +86,7 @@ const CAFE_DATA: Cafe[] = [
     tagline: "Where coffee meets craftsmanship",
     location: "Creative Quarter",
     rating: 4.9,
-    openTime: "7:30 AM - 9:30 PM"
+    openTime: "7:30 AM - 9:30 PM",
   },
   {
     id: "7",
@@ -99,7 +95,7 @@ const CAFE_DATA: Cafe[] = [
     tagline: "Premium beans, perfect atmosphere",
     location: "University District",
     rating: 4.7,
-    openTime: "6:00 AM - 11:00 PM"
+    openTime: "6:00 AM - 11:00 PM",
   },
   {
     id: "8",
@@ -108,7 +104,7 @@ const CAFE_DATA: Cafe[] = [
     tagline: "Start your day with exceptional coffee",
     location: "Business Quarter",
     rating: 4.8,
-    openTime: "5:30 AM - 8:00 PM"
+    openTime: "5:30 AM - 8:00 PM",
   },
   {
     id: "9",
@@ -117,7 +113,7 @@ const CAFE_DATA: Cafe[] = [
     tagline: "Freshly ground, perfectly brewed",
     location: "Tech Hub",
     rating: 4.9,
-    openTime: "7:00 AM - 10:00 PM"
+    openTime: "7:00 AM - 10:00 PM",
   },
   {
     id: "10",
@@ -126,7 +122,7 @@ const CAFE_DATA: Cafe[] = [
     tagline: "Tranquil vibes, extraordinary coffee",
     location: "Riverside Park",
     rating: 4.6,
-    openTime: "8:00 AM - 9:00 PM"
+    openTime: "8:00 AM - 9:00 PM",
   },
   {
     id: "11",
@@ -135,7 +131,7 @@ const CAFE_DATA: Cafe[] = [
     tagline: "Fast-paced city, slow-brewed perfection",
     location: "Metro Center",
     rating: 4.8,
-    openTime: "6:00 AM - 11:00 PM"
+    openTime: "6:00 AM - 11:00 PM",
   },
   {
     id: "12",
@@ -144,15 +140,17 @@ const CAFE_DATA: Cafe[] = [
     tagline: "Traditional methods, modern taste",
     location: "Old Town",
     rating: 4.9,
-    openTime: "7:00 AM - 10:00 PM"
-  }
+    openTime: "7:00 AM - 10:00 PM",
+  },
 ];
 
 export const HomePage = () => {
   const [selectedCafe, setSelectedCafe] = useState<Cafe | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [currentView, setCurrentView] = useState<'home' | 'bookings' | 'plans'>('home');
-  const [bookings, setBookings] = useState<Booking[]>([]);
+  const [currentView, setCurrentView] = useState<"home" | "bookings" | "plans">(
+    "home"
+  );
+  const [bookings, setBookings] = useState<Redemption[]>([]);
   const cafeGridRef = useRef<HTMLDivElement>(null);
 
   const handleCafeClick = (cafe: Cafe) => {
@@ -160,8 +158,8 @@ export const HomePage = () => {
     setIsModalOpen(true);
   };
 
-  const handleBookingComplete = (booking: Booking) => {
-    setBookings(prev => [...prev, booking]);
+  const handleBookingComplete = (redemption: Redemption) => {
+    setBookings((prev) => [...prev, redemption]);
   };
 
   const handleCloseModal = () => {
@@ -170,113 +168,135 @@ export const HomePage = () => {
   };
 
   const handleMyBookingsClick = () => {
-    setCurrentView('bookings');
+    setCurrentView("bookings");
   };
 
   const handleBackToHome = () => {
-    setCurrentView('home');
+    setCurrentView("home");
   };
 
   const handleExploreCafes = () => {
-    cafeGridRef.current?.scrollIntoView({ behavior: 'smooth' });
+    cafeGridRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
   const handleViewPlans = () => {
-    setCurrentView('plans');
+    setCurrentView("plans");
   };
 
   const handleHomeClick = () => {
-    setCurrentView('home');
+    setCurrentView("home");
   };
 
-  if (currentView === 'bookings') {
+  if (currentView === "bookings") {
     return (
-      <div className="min-h-screen bg-background">
-        <Navbar 
-          onMyBookingsClick={handleMyBookingsClick}
-          onHomeClick={handleHomeClick}
-          onCafesClick={handleExploreCafes}
-          onPlansClick={handleViewPlans}
-        />
-        <MyBookings bookings={bookings} onBack={handleBackToHome} />
-      </div>
-    );
-  }
-
-  if (currentView === 'plans') {
-    return (
-      <div className="min-h-screen bg-background">
-        <Navbar 
-          onMyBookingsClick={handleMyBookingsClick}
-          onHomeClick={handleHomeClick}
-          onCafesClick={handleExploreCafes}
-          onPlansClick={handleViewPlans}
-        />
-        <SubscriptionPlans />
-        <div className="container mx-auto px-4 py-8 text-center">
-          <button 
-            onClick={handleBackToHome}
-            className="text-accent hover:text-accent/80 transition-colors font-medium"
-          >
-            ← Back to Home
-          </button>
-        </div>
-      </div>
-    );
-  }
-
-  return (
-    <div className="min-h-screen bg-background">
-      {/* Hero Section */}
-      <HeroSection 
-        onExploreCafes={handleExploreCafes}
-        onViewPlans={handleViewPlans}
-      />
-      
-      {/* Navigation */}
-      <Navbar 
+      <Layout
         onMyBookingsClick={handleMyBookingsClick}
         onHomeClick={handleHomeClick}
         onCafesClick={handleExploreCafes}
         onPlansClick={handleViewPlans}
-      />
-      
-      {/* Cafe Discovery Section */}
-      <div ref={cafeGridRef} className="container mx-auto px-4 py-16">
-        <div className="text-center mb-12">
-          <h2 className="text-4xl font-bold text-primary mb-4">
-            Featured Cafes Near You
-          </h2>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Handpicked cafes that promise exceptional coffee, ambiance, and memorable experiences.
-          </p>
+      >
+        <div className="min-h-screen bg-background">
+          <Navbar
+            onMyBookingsClick={handleMyBookingsClick}
+            onHomeClick={handleHomeClick}
+            onCafesClick={handleExploreCafes}
+            onPlansClick={handleViewPlans}
+          />
+          <MyBookings bookings={bookings} onBack={handleBackToHome} />
+        </div>
+      </Layout>
+    );
+  }
+
+  if (currentView === "plans") {
+    return (
+      <Layout
+        onMyBookingsClick={handleMyBookingsClick}
+        onHomeClick={handleHomeClick}
+        onCafesClick={handleExploreCafes}
+        onPlansClick={handleViewPlans}
+      >
+        <div className="min-h-screen bg-background">
+          <Navbar
+            onMyBookingsClick={handleMyBookingsClick}
+            onHomeClick={handleHomeClick}
+            onCafesClick={handleExploreCafes}
+            onPlansClick={handleViewPlans}
+          />
+          <SubscriptionPlans />
+          <div className="container mx-auto px-4 py-8 text-center">
+            <button
+              onClick={handleBackToHome}
+              className="text-accent hover:text-accent/80 transition-colors font-medium"
+            >
+              ← Back to Home
+            </button>
+          </div>
+        </div>
+      </Layout>
+    );
+  }
+
+  return (
+    <Layout
+      onMyBookingsClick={handleMyBookingsClick}
+      onHomeClick={handleHomeClick}
+      onCafesClick={handleExploreCafes}
+      onPlansClick={handleViewPlans}
+    >
+      <div className="min-h-screen bg-background">
+        {/* Hero Section */}
+        <HeroSection
+          onExploreCafes={handleExploreCafes}
+          onViewPlans={handleViewPlans}
+        />
+
+        {/* Navigation */}
+        <Navbar
+          onMyBookingsClick={handleMyBookingsClick}
+          onHomeClick={handleHomeClick}
+          onCafesClick={handleExploreCafes}
+          onPlansClick={handleViewPlans}
+        />
+
+        {/* Cafe Discovery Section */}
+        <div ref={cafeGridRef} className="container mx-auto px-4 py-16">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl font-bold text-primary mb-4">
+              Featured Cafes Near You
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+              Handpicked cafes that promise exceptional coffee, ambiance, and
+              memorable experiences.
+            </p>
+          </div>
+
+          {/* Pinterest-style Grid */}
+          <div className="masonry-grid">
+            {CAFE_DATA.map((cafe) => (
+              <CafeCard
+                key={cafe.id}
+                id={cafe.id}
+                name={cafe.name}
+                image={cafe.image}
+                tagline={cafe.tagline}
+                location={cafe.location}
+                rating={cafe.rating}
+                openTime={cafe.openTime}
+                onClick={handleCafeClick}
+              />
+            ))}
+          </div>
         </div>
 
-        {/* Pinterest-style Grid */}
-        <div className="masonry-grid">
-          {CAFE_DATA.map((cafe) => (
-            <CafeCard
-              key={cafe.id}
-              id={cafe.id}
-              name={cafe.name}
-              image={cafe.image}
-              tagline={cafe.tagline}
-              location={cafe.location}
-              rating={cafe.rating}
-              openTime={cafe.openTime}
-              onClick={handleCafeClick}
-            />
-          ))}
-        </div>
+        {/* Booking Modal */}
+        <BookingModal
+          cafe={selectedCafe}
+          isOpen={isModalOpen}
+          onClose={handleCloseModal}
+          onBookingComplete={handleBookingComplete}
+        />
       </div>
-
-      {/* Booking Modal */}
-      <BookingModal
-        cafe={selectedCafe}
-        isOpen={isModalOpen}
-        onClose={handleCloseModal}
-        onBookingComplete={handleBookingComplete}
-      />
-    </div>
+    </Layout>
   );
 };
