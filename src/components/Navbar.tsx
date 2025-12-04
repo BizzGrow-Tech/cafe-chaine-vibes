@@ -26,19 +26,18 @@ export const Navbar = ({
   }
   return (
     <nav className="sticky top-0 z-50 w-full bg-background shadow-sm border-b border-border">
-      <div className="container mx-auto px-4 py-3">
+      <div className="container mx-auto px-4 py-6">
         <div className="flex items-center justify-between">
-          {/* Logo */}
+          {/* Logo (image only) */}
           <div
-            className="flex items-center space-x-3 cursor-pointer"
+            className="flex items-center cursor-pointer scale-[250%] sm:scale-[550%] pl-4"
             onClick={onHomeClick}
           >
             <img
               src={brewzzyLogo}
               alt="Brewzzy Logo"
-              className="w-8 h-8 object-contain"
+              className="w-10 h-10 object-contain"
             />
-            <span className="text-xl font-semibold text-primary">Brewzzy</span>
           </div>
 
           {/* Navigation Links */}
